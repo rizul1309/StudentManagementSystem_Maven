@@ -15,37 +15,53 @@ class StudentManagementTest {
 
     @Test
     void testAddStudent() {
-        studentManagement.addStudent(1, "John Doe", 80.0);
-        List<Student> students = studentManagement.getStudents();
+        assertTrue(studentManagement.addStudent(1, "John Doe", 80.0));
+        assertEquals(1, studentManagement.getAllStudents().size());
+    }
 
-        assertEquals(1, students.size());
-        assertEquals("John Doe", students.get(0).getName());
+    @Test
+    void testAddDuplicateStudent() {
+        studentManagement.addStudent(2, "Alice Smith", 90.0);
+        assertFalse(studentManagement.addStudent(2, "Alice Smith", 90.0)); // Duplicate ID
     }
 
     @Test
     void testUpdateStudentGrade() {
-        studentManagement.addStudent(2, "Jane Doe", 85.0);
-        boolean updated = studentManagement.updateGrade(2, 90.0);
-
-        assertTrue(updated);
-        assertEquals(90.0, studentManagement.getStudentById(2).getGrade());
+        studentManagement.addStudent(3, "Bob Johnson", 78.0);
+        assertTrue(studentManagement.updateStudentGrade(3, 85.0));
+        assertEquals(85.0, studentManagement.getStudentById(3).getGrade());
     }
 
     @Test
-    void testDeleteStudent() {
-        studentManagement.addStudent(3, "Alice", 88.0);
-        boolean removed = studentManagement.removeStudent(3);
+    void testUpdateNonExistingStudent() {
+        assertFalse(studentManagement.updateStudentGrade(99, 75.0)); // ID does not exist
+    }
 
-        assertTrue(removed);
-        assertNull(studentManagement.getStudentById(3));
+    @Test
+    void testRemoveStudent() {
+        studentManagement.addStudent(4, "Charlie Brown", 70.0);
+        assertTrue(studentManagement.removeStudent(4));
+        assertNull(studentManagement.getStudentById(4));
+    }
+
+    @Test
+    void testRemoveNonExistingStudent() {
+        assertFalse(studentManagement.removeStudent(99)); // ID does not exist
     }
 
     @Test
     void testGetStudentById() {
-        studentManagement.addStudent(4, "Bob", 70.0);
-        Student student = studentManagement.getStudentById(4);
-
+        studentManagement.addStudent(5, "David Green", 88.0);
+        Student student = studentManagement.getStudentById(5);
         assertNotNull(student);
-        assertEquals("Bob", student.getName());
+        assertEquals("David Green", student.getName());
+    }
+
+    @Test
+    void testGetAllStudents() {
+        studentManagement.addStudent(6, "Eve White", 95.0);
+        studentManagement.addStudent(7, "Frank Black", 85.5);
+        List<Student> students = studentManagement.getAllStudents();
+        assertEquals(2, students.size());
     }
 }
